@@ -29,14 +29,14 @@
         .main-search-title { font-weight: 900; color: #0d47a1; margin-bottom: 15px; display: flex; align-items: center; }
         .main-search-title::before { content: "🚌"; margin-right: 10px; }
 
-        /* サジェストリストの修正（最前面へ） */
+        /* サジェストリスト */
         .suggestion-list { position: absolute; top: 100%; left: 0; width: 100%; background: white; border-radius: 0 0 10px 10px; box-shadow: 0 8px 15px rgba(0,0,0,0.15); z-index: 3000; max-height: 200px; overflow-y: auto; display: none; border: 1px solid #ddd; }
         .suggestion-item { padding: 12px; cursor: pointer; border-bottom: 1px solid #eee; font-size: 14px; text-align: left; }
         .suggestion-item:hover { background-color: #f0f4f8; color: #0d47a1; }
         
         .container { max-width: 1000px; margin: 20px auto; padding: 0 15px; }
         
-        /* 運行情報テロップ（修正済み） */
+        /* 運行情報テロップ */
         .status-bar { background: white; border: 2px solid #2e7d32; padding: 10px; margin-bottom: 25px; border-radius: 15px; }
         .ticker { background: #f1f8e9; overflow: hidden; white-space: nowrap; padding: 8px; border-radius: 10px; position: relative; display: flex; }
         .ticker-text { display: inline-block; white-space: nowrap; padding-left: 100%; font-weight: bold; color: #1b5e20; line-height: 1.5; min-width: 100%; }
@@ -52,18 +52,24 @@
         #next-btn { right: 0; }
         .slider-container { overflow: hidden; border-radius: 20px; }
         .slider-wrapper { display: flex; transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1); }
-        
         .article-card { min-width: calc(33.333% - 20px); margin: 10px; background: white; border-radius: 25px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); cursor: pointer; text-align: center; }
         @media (max-width: 768px) {
             .article-card { min-width: calc(50% - 20px); }
             .magazine-section { padding: 0 30px; }
         }
-
         .article-img { height: 120px; background: #e3f2fd; display: flex; align-items: center; justify-content: center; font-size: 40px; }
         .article-content { padding: 15px; }
         .article-content h4 { margin: 0; font-size: 15px; color: #0d47a1; }
-        
-        footer { text-align: center; padding: 40px; color: #999; border-top: 1px solid #ddd; }
+
+        /* 暗め色の共通フッター（追加） */
+        .official-footer { background: #1a1c1e; color: #ffffff; padding: 50px 20px 20px; margin-top: 60px; text-align: left; }
+        .footer-container { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; }
+        .footer-section h3 { color: #ffffff; font-size: 18px; border-bottom: 2px solid #2e7d32; padding-bottom: 10px; margin-bottom: 20px; font-weight: 900; }
+        .footer-links { list-style: none; padding: 0; margin: 0; }
+        .footer-links li { margin-bottom: 12px; }
+        .footer-links a { color: #ffffff; text-decoration: none; font-size: 15px; transition: 0.3s; opacity: 0.8; }
+        .footer-links a:hover { opacity: 1; color: #4caf50; text-decoration: underline; }
+        .footer-bottom { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #333; font-size: 12px; color: #888; }
     </style>
 </head>
 <body>
@@ -91,10 +97,11 @@
     </div>
 
     <div class="menu-item" onclick="location.href='index.html'">■ HOME</div>
-<div class="menu-item" onclick="location.href='combinedfolder/rosen.html'">■ 路線バス</div>
-<div class="menu-item" onclick="location.href='combinedfolder/kousoku.html'">■ 高速バス</div>
-<div class="menu-item" onclick="location.href='combinedfolder/kashikiri.html'">■ 貸切バス</div>
+    <div class="menu-item" onclick="location.href='combinedfolder/rosen.html'">■ 路線バス</div>
+    <div class="menu-item" onclick="location.href='combinedfolder/kousoku.html'">■ 高速バス</div>
+    <div class="menu-item" onclick="location.href='combinedfolder/kashikiri.html'">■ 貸切バス</div>
     <div class="menu-item" onclick="location.href='newsfolder/news00003.html'">■ 求人情報</div>
+    <div class="menu-item" onclick="location.href='combinedfolder/guide.html'">■ ご利用ガイド</div>
     <div class="menu-item" onclick="location.href='combinedfolder/contact.html'">■ お問い合わせ</div>
     <div class="menu-item" id="close-btn">■ 閉じる ×</div>
 </div>
@@ -136,7 +143,37 @@
     </div>
 </div>
 
-<footer>&copy; 2026 Iwakawa Prefectural Transport.</footer>
+<footer class="official-footer">
+    <div class="footer-container">
+        <div class="footer-section">
+            <h3>岩川県交通</h3>
+            <p style="font-size: 14px; line-height: 1.8; opacity: 0.8;">
+                Roblox Free Drive Bus Group<br>
+                since 2026.01.15<br>
+                nagabusfan President
+            </p>
+        </div>
+        <div class="footer-section">
+            <h3>メニュー</h3>
+            <ul class="footer-links">
+                <li><a href="index.html">トップページ</a></li>
+                <li><a href="combinedfolder/guide.html">ご利用ガイド</a></li>
+                <li><a href="combinedfolder/contact.html">お問い合わせ</a></li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h3>外部リンク</h3>
+            <ul class="footer-links">
+                <li><a href="#">Roblox ゲーム会場</a></li>
+                <li><a href="#">公式グループページ</a></li>
+                <li><a href="#" style="opacity: 0.4; pointer-events: none;">公式Discord (未公開)</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        &copy; 2026 岩川県交通 (nagabusfan) All Rights Reserved.
+    </div>
+</footer>
 
 <script>
     let stopData = [];
@@ -145,24 +182,20 @@
 
     async function loadSiteData() {
         try {
-            // 運行情報の設定
             const resConfig = await fetch('setting/config.json');
             if (resConfig.ok) {
                 const config = await resConfig.json();
                 const tickerEl = document.getElementById('status-text');
                 tickerEl.innerText = config.statusMessage;
-                // テロップアニメーションの再起動
                 tickerEl.style.animation = 'none';
-                tickerEl.offsetHeight; // リフロー
+                tickerEl.offsetHeight; 
                 const duration = config.statusMessage.length * 0.5 + 10;
                 tickerEl.style.animation = `scroll-text ${duration}s linear infinite`;
             }
 
-            // 検索候補データの取得
             const resSearch = await fetch('setting/search.json');
             if (resSearch.ok) { stopData = await resSearch.json(); }
 
-            // 記事データの取得
             const resArts = await fetch('setting/articles.json');
             if (resArts.ok) {
                 const arts = await resArts.json();
@@ -178,7 +211,6 @@
                 });
             }
 
-            // ニュースデータの取得
             const resNews = await fetch('setting/news.json');
             if (resNews.ok) {
                 const news = await resNews.json();
@@ -200,14 +232,10 @@
         const input = document.getElementById(inputId);
         const list = document.getElementById(listId);
         const word = input.value.trim().toLowerCase();
-        
         document.querySelectorAll('.suggestion-list').forEach(el => { if(el.id !== listId) el.style.display = 'none'; });
-
         list.innerHTML = '';
         if (!word || stopData.length === 0) { list.style.display = 'none'; return; }
-
         let matches = stopData.filter(s => s.name.includes(word) || (s.kana && s.kana.includes(word)));
-
         if (matches.length > 0) {
             matches.forEach(s => {
                 const div = document.createElement('div');
@@ -236,7 +264,6 @@
         const isMobile = window.innerWidth <= 768;
         const visibleCount = isMobile ? 2 : 3;
         const movePercent = isMobile ? 50 : 33.333;
-
         if (direction === 'next') {
             currentSliderIndex = (currentSliderIndex >= articleCount - visibleCount) ? 0 : currentSliderIndex + 1;
         } else {
@@ -247,7 +274,6 @@
 
     document.getElementById('next-btn').onclick = () => moveSlider('next');
     document.getElementById('prev-btn').onclick = () => moveSlider('prev');
-
     function updateTime() { document.getElementById('current-time').innerText = "JST " + new Date().toLocaleTimeString('ja-JP'); }
     setInterval(updateTime, 1000); updateTime();
     
@@ -256,7 +282,6 @@
         m.onclick = () => { s.classList.add('active'); o.classList.add('active'); };
         o.onclick = c.onclick = () => { s.classList.remove('active'); o.classList.remove('active'); };
         loadSiteData();
-        
         document.addEventListener('click', (e) => {
             if (!e.target.closest('.search-input-wrapper')) {
                 document.querySelectorAll('.suggestion-list').forEach(el => el.style.display = 'none');
