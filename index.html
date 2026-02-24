@@ -108,7 +108,7 @@
 
 <div class="container">
     <div class="status-bar">
-        <h3 style="margin:0 0 5px 0; color:#2e7d32; font-size: 16px; display:flex; align-items:center;">
+        <h3 id="status-title-area" style="margin:0 0 5px 0; color:#2e7d32; font-size: 16px; display:flex; align-items:center;">
             <span id="live-badge" style="background:#2e7d32; color:white; padding:2px 8px; border-radius:4px; margin-right:8px; font-size:12px;">LIVE</span>運行状況
         </h3>
         <div class="ticker">
@@ -181,8 +181,8 @@
     let currentSliderIndex = 0;
 
     async function loadSiteData() {
+        // 1. 運行情報の読み込み
         try {
-            // 運行情報の設定読み込み
             const resConfig = await fetch('setting/config.json');
             if (resConfig.ok) {
                 const config = await resConfig.json();
@@ -190,30 +190,35 @@
                 const statusBar = document.querySelector('.status-bar');
                 const tickerBox = document.querySelector('.ticker');
                 const liveBadge = document.getElementById('live-badge');
-                const statusTitle = statusBar.querySelector('h3');
+                const statusTitle = document.getElementById('status-title-area');
 
-                // テキストの反映
                 tickerEl.innerText = config.statusMessage;
+                
+                // 色の反映（JSONにデータがある場合のみ）
+                if(config.statusTextColor) tickerEl.style.color = config.statusTextColor;
+                if(config.statusBorderColor) {
+                    statusBar.style.borderColor = config.statusBorderColor;
+                    liveBadge.style.backgroundColor = config.statusBorderColor;
+                    statusTitle.style.color = config.statusBorderColor;
+                }
+                if(config.statusBgColor) tickerBox.style.backgroundColor = config.statusBgColor;
 
-                // JSONの色データを適用
-                tickerEl.style.color = config.statusTextColor;
-                statusBar.style.borderColor = config.statusBorderColor;
-                tickerBox.style.backgroundColor = config.statusBgColor;
-                liveBadge.style.backgroundColor = config.statusBorderColor;
-                statusTitle.style.color = config.statusBorderColor;
-
-                // テロップアニメーションの再起動
+                // テロップアニメーションの制御
                 tickerEl.style.animation = 'none';
                 tickerEl.offsetHeight; 
-                const duration = config.statusMessage.length * 0.5 + 10;
+                const duration = Math.max(10, config.statusMessage.length * 0.5 + 5);
                 tickerEl.style.animation = `scroll-text ${duration}s linear infinite`;
             }
+        } catch (e) { console.error("Config load failed", e); }
 
-            // 検索候補データの取得
+        // 2. 検索候補
+        try {
             const resSearch = await fetch('setting/search.json');
             if (resSearch.ok) { stopData = await resSearch.json(); }
+        } catch (e) { console.error("Search data load failed", e); }
 
-            // 記事データの取得
+        // 3. スライダー記事
+        try {
             const resArts = await fetch('setting/articles.json');
             if (resArts.ok) {
                 const arts = await resArts.json();
@@ -228,8 +233,10 @@
                     wrapper.appendChild(card);
                 });
             }
+        } catch (e) { console.error("Articles load failed", e); }
 
-            // ニュースデータの取得
+        // 4. ニュース
+        try {
             const resNews = await fetch('setting/news.json');
             if (resNews.ok) {
                 const news = await resNews.json();
@@ -242,9 +249,10 @@
                     list.appendChild(item);
                 });
             }
-        } catch (e) { console.error("Data Load Error"); }
+        } catch (e) { console.error("News load failed", e); }
     }
 
+    // 検索サジェスト機能
     function showSuggestions(type, area) {
         const inputId = area + '-' + type;
         const listId = inputId + '-list';
@@ -271,6 +279,7 @@
         } else { list.style.display = 'none'; }
     }
 
+    // 検索実行
     function searchRoute(area) {
         const s = document.getElementById(area + '-start').value.trim();
         const e = document.getElementById(area + '-end').value.trim();
@@ -279,6 +288,7 @@
         window.location.href = `${searchUrl}?from=${encodeURIComponent(s)}&to=${encodeURIComponent(e)}`;
     }
 
+    // スライダー移動
     function moveSlider(direction) {
         const isMobile = window.innerWidth <= 768;
         const visibleCount = isMobile ? 2 : 3;
@@ -291,6 +301,7 @@
         document.getElementById('slider-wrapper').style.transform = `translateX(-${currentSliderIndex * movePercent}%)`;
     }
 
+    // 初期化とタイマー
     document.getElementById('next-btn').onclick = () => moveSlider('next');
     document.getElementById('prev-btn').onclick = () => moveSlider('prev');
     function updateTime() { document.getElementById('current-time').innerText = "JST " + new Date().toLocaleTimeString('ja-JP'); }
