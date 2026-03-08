@@ -604,3 +604,39 @@ body {
 .result-label { font-size: 11px; color: #666; margin-bottom: 2px; }
 .result-value { font-size: 18px; font-weight: bold; color: #2e7d32; margin-bottom: 8px; }
 .result-info { font-size: 11px; color: #999; border-top: 1px solid #eee; pt: 5px; }
+
+/* --- 運行状況（テロップ）の修正 --- */
+.status-bar {
+    background: white;
+    border: 2px solid #2e7d32;
+    padding: 10px;
+    margin-bottom: 25px;
+    border-radius: 15px;
+}
+
+.ticker {
+    background: #f1f8e9;
+    overflow: hidden;    /* はみ出た文字を隠す */
+    white-space: nowrap; /* 改行させない */
+    padding: 8px;
+    border-radius: 10px;
+    position: relative;
+    height: 24px;        /* 高さを固定 */
+}
+
+.ticker-text {
+    display: inline-block; /* これがないと transform が効きません */
+    white-space: nowrap;
+    padding-left: 100%;    /* 右端からスタートさせる */
+    font-weight: bold;
+    color: #1b5e20;
+    line-height: 24px;
+    /* アニメーション設定 */
+    animation: scroll-text 20s linear infinite;
+}
+
+/* アニメーションの定義（既存のものがあれば上書き） */
+@keyframes scroll-text {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+}
