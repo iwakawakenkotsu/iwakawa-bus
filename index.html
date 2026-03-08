@@ -6,63 +6,55 @@
     <title>岩川県交通</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
+        /* --- 基本スタイル --- */
         body { font-family: 'Noto Sans JP', sans-serif; margin: 0; padding: 0; background-color: #f3f0f9; color: #333; overflow-x: hidden; }
         header { background-color: #0d47a1; color: white; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .menu-button { background: none; border: 2px solid white; color: white; padding: 5px 15px; cursor: pointer; border-radius: 10px; font-weight: bold; }
-        .logo h1 { margin: 0 0 0 15px; font-size: 20px; letter-spacing: 2px; }
+        .menu-button { background: #2e7d32; border: none; color: white; padding: 8px 15px; cursor: pointer; border-radius: 10px; font-weight: bold; }
+        .logo h1 { margin: 0 0 0 15px; font-size: 20px; letter-spacing: 2px; border-left: 5px solid white; padding-left: 10px; }
         
-        /* サイドバー */
-        .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background-color: #ffffff; color: #333; transition: 0.3s; z-index: 2000; padding: 20px; box-sizing: border-box; overflow-y: auto; box-shadow: 2px 0 10px rgba(0,0,0,0.2); }
+        /* --- サイドバー --- */
+        .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background-color: #ffffff; color: #333; transition: 0.3s ease; z-index: 2000; padding: 20px; box-sizing: border-box; overflow-y: auto; box-shadow: 2px 0 10px rgba(0,0,0,0.2); }
         .sidebar.active { left: 0; }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 1500; }
         .overlay.active { display: block; }
-        .menu-item { padding: 15px; border-bottom: 1px solid #eee; cursor: pointer; font-weight: bold; border-radius: 10px; transition: 0.2s; }
+        .menu-item { padding: 15px; border-bottom: 1px solid #eee; cursor: pointer; font-weight: bold; border-radius: 10px; transition: 0.2s; color: #333; text-decoration: none; display: block; }
         .menu-item:hover { background: #f0f4f8; color: #0d47a1; }
 
-        /* 検索ボックス */
-        .search-box-style { background: #e3f2fd; padding: 20px; border-radius: 15px; border: 2px solid #90caf9; position: relative; }
-        .search-box-style input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #bbdefb; box-sizing: border-box; outline: none; font-size: 16px; margin-bottom: 5px; }
-        .search-btn { width: 100%; background: #2e7d32; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 5px; font-size: 16px; }
-        
-        .main-search-section { margin: 30px 0; }
-        .container { max-width: 1000px; margin: 20px auto; padding: 0 15px; }
-        
-        /* 運行情報テロップ（ここを重点修正） */
-        .status-bar { background: white; border: 2px solid #2e7d32; padding: 10px; margin-bottom: 25px; border-radius: 15px; }
-        .ticker { background: #f1f8e9; overflow: hidden; white-space: nowrap; padding: 8px; border-radius: 10px; position: relative; height: 24px; }
-        
+        /* --- 運行状況（ここが重要） --- */
+        .status-bar { background: white; border: 2px solid #ccc; padding: 12px; margin-bottom: 25px; border-radius: 15px; transition: 0.3s; }
+        .ticker { background: #f5f5f5; overflow: hidden; white-space: nowrap; padding: 10px; border-radius: 10px; position: relative; height: 24px; }
         .ticker-text { 
             display: inline-block; 
             white-space: nowrap; 
-            position: absolute; /* 位置固定を解除 */
-            left: 100%; /* 画面外右からスタート */
-            font-weight: bold; 
-            color: #1b5e20; 
-            line-height: 24px;
-            will-change: transform; /* ブラウザにアニメーションを準備させる */
+            padding-left: 100%; 
+            font-weight: 900; 
+            line-height: 24px; 
+            font-size: 16px;
         }
 
-        /* アニメーション定義 */
-        @keyframes scroll-text-kf { 
-            from { transform: translateX(0); } 
-            to { transform: translateX(-100%); } 
-        }
+        /* --- 検索ボックス --- */
+        .search-box-style { background: #e3f2fd; padding: 20px; border-radius: 15px; border: 2px solid #90caf9; position: relative; margin-bottom: 30px; }
+        .search-input-wrapper { position: relative; margin-bottom: 10px; }
+        .search-box-style input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #bbdefb; box-sizing: border-box; outline: none; font-size: 16px; }
+        .search-btn { width: 100%; background: #0d47a1; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 16px; }
 
-        /* サジェスト */
+        /* --- サジェスト表示 --- */
         .suggestion-list { position: absolute; top: 100%; left: 0; width: 100%; background: white; border: 1px solid #ddd; z-index: 3000; display: none; border-radius: 0 0 10px 10px; box-shadow: 0 5px 10px rgba(0,0,0,0.1); max-height: 200px; overflow-y: auto; }
-        .suggestion-item { padding: 12px; cursor: pointer; border-bottom: 1px solid #eee; font-size: 14px; text-align: left; }
+        .suggestion-item { padding: 12px; cursor: pointer; border-bottom: 1px solid #eee; font-size: 14px; }
+        .suggestion-item:hover { background: #f0f4f8; }
 
-        /* スライダー */
-        .magazine-section { margin: 50px 0; position: relative; padding: 0 50px; }
-        .slider-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: #fff; border: 2px solid #ddd; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; z-index: 10; font-size: 18px; display: flex; align-items: center; justify-content: center; }
-        #prev-btn { left: 0; }
-        #next-btn { right: 0; }
+        /* --- コンテンツ --- */
+        .container { max-width: 1000px; margin: 20px auto; padding: 0 15px; }
         .slider-container { overflow: hidden; border-radius: 20px; }
         .slider-wrapper { display: flex; transition: transform 0.5s ease-out; }
         .article-card { min-width: calc(33.333% - 20px); margin: 10px; background: white; border-radius: 25px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); text-align: center; cursor: pointer; }
         
-        .official-footer { background: #1a1c1e; color: #ffffff; padding: 50px 20px 20px; margin-top: 60px; }
-        .footer-bottom { text-align: center; margin-top: 40px; border-top: 1px solid #333; padding-top: 20px; font-size: 12px; color: #888; }
+        @keyframes scroll-text { 
+            from { transform: translateX(0); } 
+            to { transform: translateX(-100%); } 
+        }
+
+        footer { background: #1a1c1e; color: white; padding: 30px; text-align: center; margin-top: 50px; }
     </style>
 </head>
 <body>
@@ -72,176 +64,180 @@
         <button class="menu-button" id="menu-btn">≡ MENU</button>
         <div class="logo"><h1>岩川県交通</h1></div>
     </div>
-    <div class="time-display" id="current-time" style="font-weight:bold; font-family: monospace;">JST --:--:--</div>
+    <div id="current-time" style="font-weight:bold; font-family: monospace;">JST --:--:--</div>
 </header>
 
 <div class="sidebar" id="sidebar">
-    <div class="search-box-style" style="margin-top: 30px;">
-        <div style="font-weight:bold; margin-bottom:10px;">経路・運賃検索</div>
-        <div style="position:relative;">
-            <input type="text" id="side-start" placeholder="出発地..." oninput="showSuggestions('start', 'side')" autocomplete="off">
-            <div id="side-start-list" class="suggestion-list"></div>
-        </div>
-        <div style="position:relative;">
-            <input type="text" id="side-end" placeholder="目的地..." oninput="showSuggestions('end', 'side')" autocomplete="off">
-            <div id="side-end-list" class="suggestion-list"></div>
-        </div>
-        <button class="search-btn" onclick="searchRoute('side')">検索する</button>
-    </div>
-    <div class="menu-item" onclick="location.href='index.html'">■ HOME</div>
-    <div class="menu-item" onclick="location.href='combinedfolder/rosen.html'">■ 路線バス</div>
-    <div class="menu-item" onclick="location.href='combinedfolder/kousoku.html'">■ 高速バス</div>
-    <div class="menu-item" onclick="location.href='combinedfolder/kashikiri.html'">■ 貸切バス</div>
-    <div class="menu-item" onclick="location.href='newsfolder/news00003.html'">■ 求人情報</div>
-    <div class="menu-item" onclick="location.href='combinedfolder/guide.html'">■ ご利用ガイド</div>
-    <div class="menu-item" onclick="location.href='combinedfolder/contact.html'">■ お問い合わせ</div>
-    <div class="menu-item" id="close-btn">■ 閉じる ×</div>
+    <div style="font-weight:bold; margin: 20px 0 10px 0; color:#0d47a1;">メニュー</div>
+    <a class="menu-item" href="index.html">■ HOME</a>
+    <a class="menu-item" href="combinedfolder/rosen.html">■ 路線バス</a>
+    <a class="menu-item" href="combinedfolder/kousoku.html">■ 高速バス</a>
+    <a class="menu-item" href="combinedfolder/kashikiri.html">■ 観光・貸切バス</a>
+    <a class="menu-item" href="newsfolder/news00003.html">■ 採用・求人情報</a>
+    <a class="menu-item" href="combinedfolder/guide.html">■ ご利用ガイド</a>
+    <a class="menu-item" href="combinedfolder/contact.html">■ お問い合わせ</a>
+    <div class="menu-item" id="close-btn" style="color:red;">■ 閉じる ×</div>
 </div>
 
 <div class="container">
-    <div class="status-bar">
-        <h3 id="status-title" style="margin:0 0 5px 0; color:#2e7d32; font-size: 16px;">
-            <span id="live-badge" style="background:#2e7d32; color:white; padding:2px 8px; border-radius:4px; margin-right:8px; font-size:12px;">LIVE</span>運行状況
+    <div class="status-bar" id="status-bar">
+        <h3 id="status-title" style="margin:0 0 8px 0; font-size: 18px;">
+            <span id="live-badge" style="color:white; padding:3px 10px; border-radius:5px; margin-right:8px; font-size:12px;">LIVE</span>運行状況
         </h3>
         <div class="ticker" id="ticker-box">
-            <div class="ticker-text" id="status-text">読み込み中...</div>
+            <div class="ticker-text" id="status-text">データを読み込んでいます...</div>
         </div>
     </div>
-    
-    <h3>新着情報</h3>
-    <div id="news-list">読み込み中...</div>
 
-    <div class="search-box-style main-search-section">
-        <div style="font-weight:900; color:#0d47a1; margin-bottom:15px;">🚌 運賃・経路検索</div>
+    <div class="search-box-style">
+        <h3 style="margin-top:0; color:#0d47a1;">🔍 運賃・経路検索</h3>
         <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-            <div style="flex: 1; min-width: 200px; position:relative;">
-                <input type="text" id="main-start" placeholder="出発地を入力..." oninput="showSuggestions('start', 'main')" autocomplete="off">
+            <div class="search-input-wrapper" style="flex:1; min-width:200px;">
+                <input type="text" id="main-start" placeholder="出発地..." oninput="showSuggestions('start', 'main')" autocomplete="off">
                 <div id="main-start-list" class="suggestion-list"></div>
             </div>
-            <div style="flex: 1; min-width: 200px; position:relative;">
-                <input type="text" id="main-end" placeholder="目的地を入力..." oninput="showSuggestions('end', 'main')" autocomplete="off">
+            <div class="search-input-wrapper" style="flex:1; min-width:200px;">
+                <input type="text" id="main-end" placeholder="目的地..." oninput="showSuggestions('end', 'main')" autocomplete="off">
                 <div id="main-end-list" class="suggestion-list"></div>
             </div>
         </div>
-        <button class="search-btn" onclick="searchRoute('main')" style="background:#0d47a1;">最安運賃を検索する</button>
+        <button class="search-btn" onclick="handleSearch()">検索する</button>
     </div>
-    
-    <div class="magazine-section">
+
+    <h3>新着ニュース</h3>
+    <div id="news-list">読み込み中...</div>
+
+    <div style="margin-top:40px;">
         <h3 style="text-align:center;">おすすめコンテンツ</h3>
-        <button class="slider-arrow" id="prev-btn">◀</button>
-        <button class="slider-arrow" id="next-btn">▶</button>
         <div class="slider-container">
             <div class="slider-wrapper" id="slider-wrapper"></div>
         </div>
     </div>
 </div>
 
-<footer class="official-footer">
-    <div class="footer-bottom">&copy; 2026 岩川県交通 (nagabusfan)</div>
+<footer>
+    &copy; 2026 岩川県交通 (nagabusfan)
 </footer>
 
 <script>
     let stopData = [];
-    let articleCount = 0;
-    let currentSliderIndex = 0;
 
-    async function loadSiteData() {
-        // 1. 運行情報
+    // --- 1. 運行情報と色をconfig.jsonから取得 ---
+    async function loadConfig() {
         try {
             const res = await fetch('setting/config.json');
-            if (res.ok) {
-                const config = await res.json();
-                const textEl = document.getElementById('status-text');
-                
-                textEl.innerText = config.statusMessage;
-                
-                // デザイン適用
-                if(config.statusTextColor) textEl.style.color = config.statusTextColor;
-                if(config.statusBorderColor) {
-                    document.querySelector('.status-bar').style.borderColor = config.statusBorderColor;
-                    document.getElementById('live-badge').style.backgroundColor = config.statusBorderColor;
-                }
+            if (!res.ok) throw new Error();
+            const config = await res.json();
 
-                // 【最重要】アニメーションの強制上書き
-                // 文字数に応じて速度を自動調整
-                const speed = Math.max(8, config.statusMessage.length * 0.6 + 5);
-                textEl.style.animation = 'none'; // 一旦リセット
-                textEl.offsetHeight; // 再描画を促す
-                textEl.style.animation = `scroll-text-kf ${speed}s linear infinite`;
-            }
-        } catch (e) { console.error(e); }
+            const textEl = document.getElementById('status-text');
+            const barEl = document.getElementById('status-bar');
+            const boxEl = document.getElementById('ticker-box');
+            const badgeEl = document.getElementById('live-badge');
+            const titleEl = document.getElementById('status-title');
 
-        // 2. 検索候補
+            // テキスト反映
+            textEl.innerText = config.statusMessage;
+
+            // 色の同期（config.jsonの値を使用）
+            const mainColor = config.statusBorderColor || "#2e7d32";
+            const textColor = config.statusTextColor || "#1b5e20";
+            const bgColor = config.statusBgColor || "#f1f8e9";
+
+            barEl.style.borderColor = mainColor;
+            titleEl.style.color = mainColor;
+            badgeEl.style.backgroundColor = mainColor;
+            textEl.style.color = textColor;
+            boxEl.style.backgroundColor = bgColor;
+
+            // アニメーションを強制始動
+            startTicker(config.statusMessage.length);
+
+        } catch (e) {
+            document.getElementById('status-text').innerText = "運行状況の取得に失敗しました。";
+        }
+    }
+
+    function startTicker(textLength) {
+        const textEl = document.getElementById('status-text');
+        textEl.style.animation = 'none';
+        void textEl.offsetWidth; // 強制再描画
+        const duration = Math.max(10, textLength * 0.6 + 5);
+        textEl.style.animation = `scroll-text ${duration}s linear infinite`;
+    }
+
+    // --- 2. 検索候補の読み込み ---
+    async function loadSearchData() {
         try {
             const res = await fetch('setting/search.json');
             if (res.ok) stopData = await res.json();
         } catch (e) {}
+    }
 
-        // 3. 記事・ニュース (省略せず実行)
+    function showSuggestions(type, area) {
+        const input = document.getElementById(`${area}-${type}`);
+        const list = document.getElementById(`${area}-${type}-list`);
+        const word = input.value.trim().toLowerCase();
+        
+        if (!word) { list.style.display = 'none'; return; }
+        
+        const matches = stopData.filter(s => s.name.includes(word));
+        if (matches.length > 0) {
+            list.innerHTML = matches.map(s => `<div class="suggestion-item" onclick="setVal('${area}-${type}','${s.name}')">${s.name}</div>`).join('');
+            list.style.display = 'block';
+        } else {
+            list.style.display = 'none';
+        }
+    }
+
+    function setVal(id, val) {
+        document.getElementById(id).value = val;
+        document.querySelectorAll('.suggestion-list').forEach(l => l.style.display = 'none');
+    }
+
+    function handleSearch() {
+        const s = document.getElementById('main-start').value;
+        const e = document.getElementById('main-end').value;
+        if(!s || !e) return alert("入力してください");
+        window.location.href = `https://nagabusfan.github.io/iwakawa-district-bus-search/?from=${encodeURIComponent(s)}&to=${encodeURIComponent(e)}`;
+    }
+
+    // --- 3. ニュースとスライダー ---
+    async function loadContent() {
         try {
-            const resA = await fetch('setting/articles.json');
-            if (resA.ok) {
-                const arts = await resA.json();
-                articleCount = arts.length;
-                document.getElementById('slider-wrapper').innerHTML = arts.map(a => `
-                    <div class="article-card" onclick="location.href='${a.url}'">
-                        <div style="font-size:40px; padding:20px; background:#e3f2fd;">${a.icon}</div>
-                        <div style="padding:15px;"><h4>${a.title}</h4></div>
-                    </div>`).join('');
-            }
             const resN = await fetch('setting/news.json');
             if (resN.ok) {
                 const news = await resN.json();
                 document.getElementById('news-list').innerHTML = news.map(n => `
-                    <div style="background:white; padding:15px; margin-bottom:10px; border-radius:10px; border-left:5px solid ${n.tagColor};">
-                        <span style="background:${n.tagColor}; color:white; padding:2px 6px; border-radius:4px; font-size:12px;">${n.tag}</span>
+                    <div style="background:white; padding:12px; margin-bottom:8px; border-radius:10px; border-left:5px solid ${n.tagColor};">
+                        <span style="background:${n.tagColor}; color:white; padding:2px 6px; border-radius:4px; font-size:11px;">${n.tag}</span>
                         <a href="${n.url}" style="margin-left:10px; font-weight:bold; color:#333; text-decoration:none;">${n.title}</a>
+                    </div>`).join('');
+            }
+            const resA = await fetch('setting/articles.json');
+            if (resA.ok) {
+                const arts = await resA.json();
+                document.getElementById('slider-wrapper').innerHTML = arts.map(a => `
+                    <div class="article-card" onclick="location.href='${a.url}'">
+                        <div style="font-size:40px; padding:20px; background:#f0f4f8;">${a.icon}</div>
+                        <div style="padding:15px;"><h4>${a.title}</h4></div>
                     </div>`).join('');
             }
         } catch (e) {}
     }
 
-    // サジェスト機能
-    function showSuggestions(type, area) {
-        const input = document.getElementById(`${area}-${type}`);
-        const list = document.getElementById(`${area}-${type}-list`);
-        const word = input.value.trim().toLowerCase();
-        if (!word) { list.style.display = 'none'; return; }
-        const matches = stopData.filter(s => s.name.includes(word));
-        if (matches.length > 0) {
-            list.innerHTML = matches.map(s => `<div class="suggestion-item" onclick="setVal('${area}-${type}','${s.name}')">${s.name}</div>`).join('');
-            list.style.display = 'block';
-        } else { list.style.display = 'none'; }
-    }
-    function setVal(id, val) { 
-        document.getElementById(id).value = val; 
-        document.querySelectorAll('.suggestion-list').forEach(l => l.style.display = 'none'); 
-    }
-
-    function searchRoute(area) {
-        const s = document.getElementById(area + '-start').value;
-        const e = document.getElementById(area + '-end').value;
-        if (!s || !e) { alert("出発地と目的地を入力してください"); return; }
-        window.location.href = `https://nagabusfan.github.io/iwakawa-district-bus-search/?from=${encodeURIComponent(s)}&to=${encodeURIComponent(e)}`;
-    }
-
-    // スライダー
-    function moveSlider(dir) {
-        const step = window.innerWidth <= 768 ? 50 : 33.333;
-        if (dir === 'next') currentSliderIndex = (currentSliderIndex >= articleCount - 2) ? 0 : currentSliderIndex + 1;
-        else currentSliderIndex = (currentSliderIndex <= 0) ? articleCount - 2 : currentSliderIndex - 1;
-        document.getElementById('slider-wrapper').style.transform = `translateX(-${currentSliderIndex * step}%)`;
-    }
-
-    document.getElementById('next-btn').onclick = () => moveSlider('next');
-    document.getElementById('prev-btn').onclick = () => moveSlider('prev');
-    setInterval(() => { document.getElementById('current-time').innerText = "JST " + new Date().toLocaleTimeString('ja-JP'); }, 1000);
-
+    // --- 初期化 ---
     window.onload = () => {
         const m = document.getElementById('menu-btn'), s = document.getElementById('sidebar'), o = document.getElementById('overlay'), c = document.getElementById('close-btn');
         m.onclick = () => { s.classList.add('active'); o.classList.add('active'); };
         o.onclick = c.onclick = () => { s.classList.remove('active'); o.classList.remove('active'); };
-        loadSiteData();
+        
+        loadConfig();
+        loadSearchData();
+        loadContent();
+
+        setInterval(() => {
+            document.getElementById('current-time').innerText = "JST " + new Date().toLocaleTimeString('ja-JP');
+        }, 1000);
     };
 </script>
 </body>
