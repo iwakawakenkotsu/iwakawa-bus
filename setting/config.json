@@ -1,6 +1,6 @@
 {
-"statusMessge": "【‼️運休】現在、一部路線で運休が発生しております。詳しくは、各営業所にお問い合わせください。",
- "statusBgColor": "#ffebee",
-"statusTextColor": "#b71c1c",
-"statusBorderColor": "#d32f2f"
+  "statusMessage": "【平常運行】 全線で平常通り運行しております。今日も岩川県交通をご利用いただきありがとうございます。",
+  "statusBgColor": "#f1f8e9",
+  "statusTextColor": "#1b5e20",
+  "statusBorderColor": "#2e7d32"
 }
