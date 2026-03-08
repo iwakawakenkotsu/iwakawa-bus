@@ -21,49 +21,47 @@
 
         /* 検索ボックス */
         .search-box-style { background: #e3f2fd; padding: 20px; border-radius: 15px; border: 2px solid #90caf9; position: relative; }
-        .search-input-wrapper { position: relative; margin-bottom: 10px; }
-        .search-box-style input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #bbdefb; box-sizing: border-box; outline: none; font-size: 16px; }
+        .search-box-style input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #bbdefb; box-sizing: border-box; outline: none; font-size: 16px; margin-bottom: 5px; }
         .search-btn { width: 100%; background: #2e7d32; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 5px; font-size: 16px; }
         
         .main-search-section { margin: 30px 0; }
-        .main-search-title { font-weight: 900; color: #0d47a1; margin-bottom: 15px; display: flex; align-items: center; }
-        .main-search-title::before { content: "🚌"; margin-right: 10px; }
-
         .container { max-width: 1000px; margin: 20px auto; padding: 0 15px; }
         
-        /* 運行情報テロップ */
+        /* 運行情報テロップ（ここを重点修正） */
         .status-bar { background: white; border: 2px solid #2e7d32; padding: 10px; margin-bottom: 25px; border-radius: 15px; }
-        .ticker { background: #f1f8e9; overflow: hidden; white-space: nowrap; padding: 8px; border-radius: 10px; position: relative; }
+        .ticker { background: #f1f8e9; overflow: hidden; white-space: nowrap; padding: 8px; border-radius: 10px; position: relative; height: 24px; }
+        
         .ticker-text { 
             display: inline-block; 
             white-space: nowrap; 
-            padding-left: 100%; 
+            position: absolute; /* 位置固定を解除 */
+            left: 100%; /* 画面外右からスタート */
             font-weight: bold; 
             color: #1b5e20; 
-            line-height: 1.5; 
-        }
-        @keyframes scroll-text { 
-            0% { transform: translateX(0); } 
-            100% { transform: translateX(-100%); } 
+            line-height: 24px;
+            will-change: transform; /* ブラウザにアニメーションを準備させる */
         }
 
-        /* サジェストリスト */
+        /* アニメーション定義 */
+        @keyframes scroll-text-kf { 
+            from { transform: translateX(0); } 
+            to { transform: translateX(-100%); } 
+        }
+
+        /* サジェスト */
         .suggestion-list { position: absolute; top: 100%; left: 0; width: 100%; background: white; border: 1px solid #ddd; z-index: 3000; display: none; border-radius: 0 0 10px 10px; box-shadow: 0 5px 10px rgba(0,0,0,0.1); max-height: 200px; overflow-y: auto; }
         .suggestion-item { padding: 12px; cursor: pointer; border-bottom: 1px solid #eee; font-size: 14px; text-align: left; }
-        .suggestion-item:hover { background: #f0f4f8; }
 
-        /* おすすめコンテンツ */
+        /* スライダー */
         .magazine-section { margin: 50px 0; position: relative; padding: 0 50px; }
-        .slider-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: #fff; border: 2px solid #ddd; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; z-index: 10; font-size: 18px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .slider-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: #fff; border: 2px solid #ddd; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; z-index: 10; font-size: 18px; display: flex; align-items: center; justify-content: center; }
         #prev-btn { left: 0; }
         #next-btn { right: 0; }
         .slider-container { overflow: hidden; border-radius: 20px; }
         .slider-wrapper { display: flex; transition: transform 0.5s ease-out; }
         .article-card { min-width: calc(33.333% - 20px); margin: 10px; background: white; border-radius: 25px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); text-align: center; cursor: pointer; }
-        @media (max-width: 768px) { .article-card { min-width: calc(50% - 20px); } }
         
         .official-footer { background: #1a1c1e; color: #ffffff; padding: 50px 20px 20px; margin-top: 60px; }
-        .footer-container { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; }
         .footer-bottom { text-align: center; margin-top: 40px; border-top: 1px solid #333; padding-top: 20px; font-size: 12px; color: #888; }
     </style>
 </head>
@@ -80,11 +78,11 @@
 <div class="sidebar" id="sidebar">
     <div class="search-box-style" style="margin-top: 30px;">
         <div style="font-weight:bold; margin-bottom:10px;">経路・運賃検索</div>
-        <div class="search-input-wrapper">
+        <div style="position:relative;">
             <input type="text" id="side-start" placeholder="出発地..." oninput="showSuggestions('start', 'side')" autocomplete="off">
             <div id="side-start-list" class="suggestion-list"></div>
         </div>
-        <div class="search-input-wrapper">
+        <div style="position:relative;">
             <input type="text" id="side-end" placeholder="目的地..." oninput="showSuggestions('end', 'side')" autocomplete="off">
             <div id="side-end-list" class="suggestion-list"></div>
         </div>
@@ -106,7 +104,7 @@
             <span id="live-badge" style="background:#2e7d32; color:white; padding:2px 8px; border-radius:4px; margin-right:8px; font-size:12px;">LIVE</span>運行状況
         </h3>
         <div class="ticker" id="ticker-box">
-            <div class="ticker-text" id="status-text">データの読み込み中...</div>
+            <div class="ticker-text" id="status-text">読み込み中...</div>
         </div>
     </div>
     
@@ -114,13 +112,13 @@
     <div id="news-list">読み込み中...</div>
 
     <div class="search-box-style main-search-section">
-        <div class="main-search-title">運賃・経路検索</div>
+        <div style="font-weight:900; color:#0d47a1; margin-bottom:15px;">🚌 運賃・経路検索</div>
         <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-            <div class="search-input-wrapper" style="flex: 1; min-width: 200px;">
+            <div style="flex: 1; min-width: 200px; position:relative;">
                 <input type="text" id="main-start" placeholder="出発地を入力..." oninput="showSuggestions('start', 'main')" autocomplete="off">
                 <div id="main-start-list" class="suggestion-list"></div>
             </div>
-            <div class="search-input-wrapper" style="flex: 1; min-width: 200px;">
+            <div style="flex: 1; min-width: 200px; position:relative;">
                 <input type="text" id="main-end" placeholder="目的地を入力..." oninput="showSuggestions('end', 'main')" autocomplete="off">
                 <div id="main-end-list" class="suggestion-list"></div>
             </div>
@@ -139,9 +137,6 @@
 </div>
 
 <footer class="official-footer">
-    <div class="footer-container">
-        <div class="footer-section"><h3>岩川県交通</h3><p>Roblox Bus Group since 2026</p></div>
-    </div>
     <div class="footer-bottom">&copy; 2026 岩川県交通 (nagabusfan)</div>
 </footer>
 
@@ -157,103 +152,84 @@
             if (res.ok) {
                 const config = await res.json();
                 const textEl = document.getElementById('status-text');
-                const barEl = document.querySelector('.status-bar');
-                const boxEl = document.getElementById('ticker-box');
-                const badgeEl = document.getElementById('live-badge');
-                const titleEl = document.getElementById('status-title');
-
+                
                 textEl.innerText = config.statusMessage;
+                
+                // デザイン適用
                 if(config.statusTextColor) textEl.style.color = config.statusTextColor;
                 if(config.statusBorderColor) {
-                    barEl.style.borderColor = config.statusBorderColor;
-                    badgeEl.style.backgroundColor = config.statusBorderColor;
-                    titleEl.style.color = config.statusBorderColor;
+                    document.querySelector('.status-bar').style.borderColor = config.statusBorderColor;
+                    document.getElementById('live-badge').style.backgroundColor = config.statusBorderColor;
                 }
-                if(config.statusBgColor) boxEl.style.backgroundColor = config.statusBgColor;
 
-                // アニメーション強制始動
-                textEl.style.animation = 'none';
-                void textEl.offsetWidth; 
-                const speed = Math.max(10, config.statusMessage.length * 0.5 + 5);
-                textEl.style.animation = `scroll-text ${speed}s linear infinite`;
+                // 【最重要】アニメーションの強制上書き
+                // 文字数に応じて速度を自動調整
+                const speed = Math.max(8, config.statusMessage.length * 0.6 + 5);
+                textEl.style.animation = 'none'; // 一旦リセット
+                textEl.offsetHeight; // 再描画を促す
+                textEl.style.animation = `scroll-text-kf ${speed}s linear infinite`;
             }
-        } catch (e) { console.error("Config error", e); }
+        } catch (e) { console.error(e); }
 
-        // 2. 検索候補データの取得
+        // 2. 検索候補
         try {
             const res = await fetch('setting/search.json');
             if (res.ok) stopData = await res.json();
-        } catch (e) { console.error("Search data error", e); }
+        } catch (e) {}
 
-        // 3. スライダー記事
+        // 3. 記事・ニュース (省略せず実行)
         try {
-            const res = await fetch('setting/articles.json');
-            if (res.ok) {
-                const arts = await res.json();
+            const resA = await fetch('setting/articles.json');
+            if (resA.ok) {
+                const arts = await resA.json();
                 articleCount = arts.length;
                 document.getElementById('slider-wrapper').innerHTML = arts.map(a => `
                     <div class="article-card" onclick="location.href='${a.url}'">
                         <div style="font-size:40px; padding:20px; background:#e3f2fd;">${a.icon}</div>
                         <div style="padding:15px;"><h4>${a.title}</h4></div>
-                    </div>
-                `).join('');
+                    </div>`).join('');
             }
-        } catch (e) {}
-
-        // 4. ニュース
-        try {
-            const res = await fetch('setting/news.json');
-            if (res.ok) {
-                const news = await res.json();
+            const resN = await fetch('setting/news.json');
+            if (resN.ok) {
+                const news = await resN.json();
                 document.getElementById('news-list').innerHTML = news.map(n => `
                     <div style="background:white; padding:15px; margin-bottom:10px; border-radius:10px; border-left:5px solid ${n.tagColor};">
                         <span style="background:${n.tagColor}; color:white; padding:2px 6px; border-radius:4px; font-size:12px;">${n.tag}</span>
                         <a href="${n.url}" style="margin-left:10px; font-weight:bold; color:#333; text-decoration:none;">${n.title}</a>
-                    </div>
-                `).join('');
+                    </div>`).join('');
             }
         } catch (e) {}
     }
 
-    // サジェスト機能（修正版）
+    // サジェスト機能
     function showSuggestions(type, area) {
         const input = document.getElementById(`${area}-${type}`);
         const list = document.getElementById(`${area}-${type}-list`);
         const word = input.value.trim().toLowerCase();
-        
         if (!word) { list.style.display = 'none'; return; }
-        
-        const matches = stopData.filter(s => s.name.includes(word) || (s.kana && s.kana.includes(word)));
-        
+        const matches = stopData.filter(s => s.name.includes(word));
         if (matches.length > 0) {
-            list.innerHTML = matches.map(s => `
-                <div class="suggestion-item" onclick="setVal('${area}-${type}','${s.name}')">${s.name}</div>
-            `).join('');
+            list.innerHTML = matches.map(s => `<div class="suggestion-item" onclick="setVal('${area}-${type}','${s.name}')">${s.name}</div>`).join('');
             list.style.display = 'block';
-        } else {
-            list.style.display = 'none';
-        }
+        } else { list.style.display = 'none'; }
     }
-
     function setVal(id, val) { 
         document.getElementById(id).value = val; 
-        document.getElementById(id + '-list').style.display = 'none'; 
+        document.querySelectorAll('.suggestion-list').forEach(l => l.style.display = 'none'); 
     }
 
-    // 検索実行
     function searchRoute(area) {
-        const s = document.getElementById(area + '-start').value.trim();
-        const e = document.getElementById(area + '-end').value.trim();
-        if (!s || !e || s === e) { alert("正しい駅名を入力してください"); return; }
+        const s = document.getElementById(area + '-start').value;
+        const e = document.getElementById(area + '-end').value;
+        if (!s || !e) { alert("出発地と目的地を入力してください"); return; }
         window.location.href = `https://nagabusfan.github.io/iwakawa-district-bus-search/?from=${encodeURIComponent(s)}&to=${encodeURIComponent(e)}`;
     }
 
-    // スライダー制御
+    // スライダー
     function moveSlider(dir) {
-        const visible = window.innerWidth <= 768 ? 2 : 3;
         const step = window.innerWidth <= 768 ? 50 : 33.333;
-        if (dir === 'next') currentSliderIndex = (currentSliderIndex >= articleCount - visible) ? 0 : currentSliderIndex + 1;
-        else currentSliderIndex = (currentSliderIndex <= 0) ? Math.max(0, articleCount - visible) : currentSliderIndex - 1;
+        if (dir === 'next') currentSliderIndex = (currentSliderIndex >= articleCount - 2) ? 0 : currentSliderIndex + 1;
+        else currentSliderIndex = (currentSliderIndex <= 0) ? articleCount - 2 : currentSliderIndex - 1;
         document.getElementById('slider-wrapper').style.transform = `translateX(-${currentSliderIndex * step}%)`;
     }
 
@@ -266,12 +242,6 @@
         m.onclick = () => { s.classList.add('active'); o.classList.add('active'); };
         o.onclick = c.onclick = () => { s.classList.remove('active'); o.classList.remove('active'); };
         loadSiteData();
-        // 外側クリックでサジェストを閉じる
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.search-input-wrapper')) {
-                document.querySelectorAll('.suggestion-list').forEach(l => l.style.display = 'none');
-            }
-        });
     };
 </script>
 </body>
