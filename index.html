@@ -227,8 +227,8 @@
     function searchRoute(area) {
         const s = document.getElementById(area + '-start').value.trim();
         const e = document.getElementById(area + '-end').value.trim();
-        if (!s || !e || s === e) { alert("正しい駅名を選択してください"); return; }
-        const searchUrl = "https://nagabusfan.github.io/iwakawa-district-bus-search/";
+        if (!s || !e || s === e) { alert("正しい停留所名を選択してください"); return; }
+        const searchUrl = "https://iwakawakenkotsu.github.io/iwakawa-district-bus-search/";
         window.location.href = `${searchUrl}?from=${encodeURIComponent(s)}&to=${encodeURIComponent(e)}`;
     }
 
